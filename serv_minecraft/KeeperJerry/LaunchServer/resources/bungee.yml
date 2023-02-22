@@ -1,0 +1,8 @@
+name: LaunchServer
+description: "KeeperJerry's Launcher Server"
+version: 1.7.5.2
+
+author: "KeeperJerry & sashok724"
+website: 'https://launcher.keeperjerry.ru/'
+
+main: launchserver.plugin.bungee.PluginBungee
