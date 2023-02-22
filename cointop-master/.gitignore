@@ -1,0 +1,67 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, build with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+.DS_Store
+
+# snapcraft files
+parts
+prime
+snap
+!snapcraft.yaml
+!snap/snapcraft.yaml
+stage
+*.snap
+*.xdelta3
+meta/metrics/snapcraft.cfg
+
+# flatpak files
+.flatpak-builder
+build-dir
+
+# bfg
+bfg.jar
+*bfg-report*
+*bfg-report
+
+# vim
+*.swp
+*.swo
+
+# builds
+build
+dist
+bin
+main
+!main.go
+wasm
+.config
+.bz2
+
+#repo
+# do not ignore .flathub
+# do not ignore .rpm
+# do not ignore .copr
+
+# AppImage
+*.AppImage
+.appimage_workspace
+
+todo.txt
+.vscode
+
+docs/public
+deploy_docs.sh
+package-lock.json
+
+# Local Netlify folder
+.netlify

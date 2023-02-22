@@ -1,0 +1,12 @@
+baseURL = "https://docs.cointop.sh/"
+languageCode = "en-us"
+title = "Cointop Documentation"
+theme = "hugo-book"
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+[context.production.environment]
+  HUGO_VERSION = "0.81.0"
+  HUGO_ENV = "production"
+  HUGO_ENABLEGITINFO = "true"

@@ -1,0 +1,26 @@
+name: cointop
+adopt-info: cointop
+summary: Interactive terminal based UI application for tracking cryptocurrencies
+description: |
+  cointop is a fast and lightweight interactive terminal based UI application for tracking and monitoring cryptocurrency coin stats in real-time.
+grade: stable
+confinement: strict
+base: core20
+
+parts:
+  cointop:
+    source: .
+    plugin: go
+    build-packages:
+      - git
+    override-pull: |
+      snapcraftctl pull
+      snapcraftctl set-version $(git describe --abbrev=0 --tags)
+
+apps:
+  cointop:
+    command: bin/cointop
+    plugs:
+      - network
+      - network-bind
+      - home

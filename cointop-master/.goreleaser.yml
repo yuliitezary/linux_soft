@@ -1,0 +1,9 @@
+builds:
+  - binary: cointop
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+    ldflags:
+     - -X github.com/cointop-sh/cointop/cointop.version={{.Env.VERSION}}
