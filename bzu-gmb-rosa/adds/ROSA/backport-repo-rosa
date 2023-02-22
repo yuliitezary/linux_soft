@@ -1,0 +1,17 @@
+echo "[x11_backports_personal-x86-64]
+name=x11_backports_personal-x86-64
+baseurl=http://abf-downloads.rosalinux.ru/x11_backports_personal/repository/rosa2021.1/x86_64/main/release
+gpgcheck=0
+enabled=1
+cost=999
+
+[x11_backports_personal-i686]
+name=x11_backports_personal-i686
+baseurl=http://abf-downloads.rosalinux.ru/x11_backports_personal/repository/rosa2021.1/x86_64/main/release
+gpgcheck=0
+enabled=1
+cost=1000" > /tmp/x11_backports_personal.repo
+
+sudo mv /tmp/x11_backports_personal.repo /etc/yum.repos.d
+
+sudo dnf --refresh --nobest distrosync
