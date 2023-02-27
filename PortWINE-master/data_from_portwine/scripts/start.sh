@@ -597,7 +597,7 @@ else
         fi
         
         PW_EXEC_FROM_DESKTOP="$(cat "${PORT_WINE_PATH}/${PW_YAD_SET}"* | grep Exec | head -n 1 | awk -F"=env " '{print $2}')"
-        echo ${PW_EXEC_FROM_DESKTOP[*]}
+        export portwine_exe="$(echo $PW_EXEC_FROM_DESKTOP | awk -F"start.sh" '{print $1}')"
 
         echo "Restarting PP after choose desktop file..."
         # stop_portwine
@@ -668,8 +668,27 @@ else
     export -f gui_open_scripts_from_backup
 
 
-    export KEY=$RANDOM
-    "${pw_yad_new}" --plug=${KEY} --tabnum=4 --form --columns=3 --align-buttons --keep-icon-size  --separator=";" \
+    export KEY="$RANDOM"
+    
+    orig_IFS="$IFS" && IFS=$'\n'
+    PW_ALL_DF="$(ls ${PORT_WINE_PATH}/ | grep .desktop | grep -vE '(PortProton|readme)')"
+    
+    PW_GENERATE_BUTTONS="--field=   $loc_create_shortcut_from_gui!$PW_GUI_ICON_PATH/separator.png!:FBTN%@bash -c \"button_click pw_find_exe\"%"
+    # for PW_DESKTOP_FILES in ${PW_ALL_DF} ; do
+    #     echo $PW_DESKTOP_FILES
+    #     PW_NAME_D_NAME="$(cat "${PORT_WINE_PATH}/$PW_DESKTOP_FILES" | grep Name | awk -F= '{print $2}')"
+    #     PW_NAME_D_ICON="$(cat "${PORT_WINE_PATH}/$PW_DESKTOP_FILES" | grep Icon | awk -F= '{print $2}')"
+    #     #PW_NAME_D_ICON="$PW_GUI_ICON_PATH/separator.png"
+    #     PW_DESKTOP_FILES=$(sed 's/ /¬/g' <<< "$PW_DESKTOP_FILES")
+    #     PW_GENERATE_BUTTONS+="--field=  ${PW_NAME_D_NAME}!${PW_NAME_D_ICON}!:FBTN%@bash -c \"run_desktop_b_click "${PW_DESKTOP_FILES}"\"%"
+    #     echo $PW_DESKTOP_FILES
+    # done
+    IFS="$orig_IFS"
+    old_IFS=$IFS && IFS="%"
+    "${pw_yad_new}" --plug=$KEY --tabnum=5 --form --columns=2 --align-buttons --keep-icon-size --scroll --separator=" " ${PW_GENERATE_BUTTONS} &
+    IFS="$orig_IFS"
+
+    "${pw_yad_new}" --plug=${KEY} --tabnum=4 --form --columns=3 --align-buttons --keep-icon-size --separator=";" \
     --field="   $loc_gui_pw_reinstall_pp"!"$PW_GUI_ICON_PATH/separator.png"!"":"FBTN" '@bash -c "button_click gui_pw_reinstall_pp"' \
     --field="   $loc_gui_rm_pp"!"$PW_GUI_ICON_PATH/separator.png"!"":"FBTN" '@bash -c "button_click gui_rm_portproton"' \
     --field="   $loc_gui_upd_pp"!"$PW_GUI_ICON_PATH/separator.png"!"":"FBTN" '@bash -c "button_click gui_pw_update"' \
@@ -709,16 +728,16 @@ else
     --field="   Yabause"!"$PW_GUI_ICON_PATH/yabause.png"!"":"FBTN" '@bash -c "button_click PW_YABAUSE"' &
 
     "${pw_yad_new}" --plug=$KEY --tabnum=1 --form --columns=3 --align-buttons --keep-icon-size --scroll \
+    --field="   Lesta Game Center"!"$PW_GUI_ICON_PATH/lgc.png"!"":"FBTN" '@bash -c "button_click PW_LGC"' \
     --field="   Wargaming Game Center"!"$PW_GUI_ICON_PATH/wgc.png"!"":"FBTN" '@bash -c "button_click PW_WGC"' \
+    --field="   vkPlay Games Center"!"$PW_GUI_ICON_PATH/mygames.png"!"":"FBTN" '@bash -c "button_click PW_VKPLAY"' \
     --field="   Battle.net Launcher"!"$PW_GUI_ICON_PATH/battle_net.png"!"":"FBTN" '@bash -c "button_click PW_BATTLE_NET"' \
     --field="   Epic Games Launcher"!"$PW_GUI_ICON_PATH/epicgames.png"!"":"FBTN" '@bash -c "button_click PW_EPIC"' \
     --field="   GoG Galaxy Launcher"!"$PW_GUI_ICON_PATH/gog.png"!"":"FBTN" '@bash -c "button_click PW_GOG"' \
     --field="   Ubisoft Game Launcher"!"$PW_GUI_ICON_PATH/ubc.png"!"":"FBTN" '@bash -c "button_click PW_UBC"' \
     --field="   EVE Online Launcher"!"$PW_GUI_ICON_PATH/eve.png"!"":"FBTN" '@bash -c "button_click PW_EVE"' \
-    --field="   Lesta Game Center"!"$PW_GUI_ICON_PATH/lgc.png"!"":"FBTN" '@bash -c "button_click PW_LGC"' \
     --field="   EA App"!"$PW_GUI_ICON_PATH/eaapp.png"!"":"FBTN" '@bash -c "button_click PW_EAAPP"' \
     --field="   Rockstar Games Launcher"!"$PW_GUI_ICON_PATH/Rockstar.png"!"":"FBTN" '@bash -c "button_click PW_ROCKSTAR"' \
-    --field="   vkPlay Games Center"!"$PW_GUI_ICON_PATH/mygames.png"!"":"FBTN" '@bash -c "button_click PW_VKPLAY"' \
     --field="   Ankama Launcher"!"$PW_GUI_ICON_PATH/ankama.png"!"":"FBTN" '@bash -c "button_click PW_ANKAMA"' \
     --field="   OSU"!"$PW_GUI_ICON_PATH/osu.png"!"":"FBTN" '@bash -c "button_click PW_OSU"' \
     --field="   League of Legends"!"$PW_GUI_ICON_PATH/lol.png"!"":"FBTN" '@bash -c "button_click PW_LOL"' \
@@ -734,27 +753,12 @@ else
     --field="   Warframe"!"$PW_GUI_ICON_PATH/warframe.png"!"":"FBTN" '@bash -c "button_click PW_WARFRAME"' \
     --field="   Panzar"!"$PW_GUI_ICON_PATH/panzar.png"!"":"FBTN" '@bash -c "button_click PW_PANZAR"' \
     --field="   STALCRAFT"!"$PW_GUI_ICON_PATH/stalcraft.png"!"":"FBTN" '@bash -c "button_click PW_STALCRAFT"' \
+    --field="   ROBLOX"!"$PW_GUI_ICON_PATH/roblox.png"!"":"FBTN" '@bash -c "button_click PW_ROBLOX"' \
     --field="   Path of Exile"!"$PW_GUI_ICON_PATH/poe.png"!"":"FBTN" '@bash -c "button_click PW_POE"' &
 
     # --field="   Secret World Legends (ENG)"!"$PW_GUI_ICON_PATH/swl.png"!"":"FBTN" '@bash -c "button_click PW_SWL"'
     # --field="   Guild Wars 2"!"$PW_GUI_ICON_PATH/gw2.png"!"":"FBTN" '@bash -c "button_click PW_GUILD_WARS_2"'
     # --field="   Bethesda.net Launcher"!"$PW_GUI_ICON_PATH/bethesda.png"!"":"FBTN" '@bash -c "button_click PW_BETHESDA"'
-
-    orig_IFS="$IFS" && IFS=$'\n'
-    PW_ALL_DF="$(ls ${PORT_WINE_PATH}/ | grep .desktop | grep -v "PortProton" | grep -v "readme")"
-    IFS="$orig_IFS"
-
-    for PW_DESKTOP_FILES in ${PW_ALL_DF} ; do
-        PW_NAME_D_NAME="$(cat "${PORT_WINE_PATH}/$PW_DESKTOP_FILES" | grep Name | awk -F= '{print $2}')"
-        PW_NAME_D_ICON="$(cat "${PORT_WINE_PATH}/$PW_DESKTOP_FILES" | grep Icon | awk -F= '{print $2}')"
-
-        PW_GENERATE_BUTTONS+="--field=  ${PW_NAME_D_NAME}!${PW_NAME_D_ICON}!:FBTN%@bash -c \"run_desktop_b_click ${PW_DESKTOP_FILES}\"%"
-    done
-
-    old_IFS=$IFS && IFS="%"
-    "${pw_yad_new}" --plug=$KEY --tabnum=5 --form --columns=2 --align-buttons --keep-icon-size --scroll --separator=" " ${PW_GENERATE_BUTTONS} &
-    IFS="$orig_IFS"
-
 
     "${pw_yad_new}" --key=$KEY --notebook --borders=5 --width=1000 --height=235 --no-buttons --auto-close --center \
     --window-icon="$PW_GUI_ICON_PATH/port_proton.png" --title "${portname}-${install_ver} (${scripts_install_ver})" \
@@ -762,14 +766,13 @@ else
     --tab="$loc_mg_autoinstall"!"$PW_GUI_ICON_PATH/separator.png"!"" \
     --tab="$loc_mg_emulators"!"$PW_GUI_ICON_PATH/separator.png"!"" \
     --tab="$loc_mg_wine_settings"!"$PW_GUI_ICON_PATH/separator.png"!"" \
-    --tab="$loc_mg_portproton_settings"!"$PW_GUI_ICON_PATH/separator.png"!""
+    --tab="$loc_mg_portproton_settings"!"$PW_GUI_ICON_PATH/separator.png"!"" \
+    --tab="$loc_mg_installed"!"$PW_GUI_ICON_PATH/separator.png"!""
     YAD_STATUS="$?"
     if [[ "$YAD_STATUS" == "1" || "$YAD_STATUS" == "252" ]] ; then exit 0 ; fi
 
     if [[ -f "${PORT_WINE_TMP_PATH}/tmp_yad_form" ]]; then
         export PW_YAD_SET=$(cat "${PORT_WINE_TMP_PATH}/tmp_yad_form" | head -n 1 | awk '{print $1}')
-        echo "from tmp_yad_form $PW_YAD_SET, and cat tmp_yad_form"
-        cat "${PORT_WINE_TMP_PATH}/tmp_yad_form"
     fi
     if [[ -f "${PORT_WINE_TMP_PATH}/tmp_yad_form_vulkan" ]] ; then
         export VULKAN_MOD=$(cat "${PORT_WINE_TMP_PATH}/tmp_yad_form_vulkan" | grep \;\;  | awk -F";" '{print $1}')
@@ -835,7 +838,9 @@ case "$PW_YAD_SET" in
     pw_create_prefix_backup) pw_create_prefix_backup ;;
     gui_credits) gui_credits ;;
     pw_start_cont_xterm) pw_start_cont_xterm ;;
+    pw_find_exe) pw_find_exe ;;
     PW_*) pw_autoinstall_from_db ;;
+    # *.desktop) run_desktop_b_click
 esac
 
 stop_portwine
